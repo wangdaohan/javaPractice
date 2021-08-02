@@ -26,13 +26,11 @@ public class StringCompression {
      *         i=0 用于顺序读取数组
      *         start=0 浮标 - 用于记录相同字符的开始位置 ，当chars[i]!= chars[i+1]时,start往前移 -》 start = read+1
      *         write: 记录应该在哪里写统计的个数，write = start+1的位置
-     *
-     *
      */
     public static int stringCompress(char[] chars){
         int start=0,write=0;
-        for(int i=0;i<chars.length;i++){
-            if(i+1==chars.length || chars[i+1] != chars[i] ) {
+        for(int i=0; i<chars.length; i++){
+            if(i+1==chars.length || chars[i+1] != chars[i]) {
                 write = start+1;
                 if(i > start){
                     //将统计个数转成char数组，以方便放进原数组中，如12，转成['1','2']

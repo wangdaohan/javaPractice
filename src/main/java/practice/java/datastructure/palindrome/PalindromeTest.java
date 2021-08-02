@@ -2,6 +2,8 @@ package practice.java.datastructure.palindrome;
 
 /**
  * Created by patrick on 6/15/2015.
+ *
+ * palindrom: 回环字符
  */
 public class PalindromeTest {
     public static void main(String[] args){
