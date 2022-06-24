@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class FractionRecurringDecimal {
     public static void main(String[] args) {
-        System.out.println(FractionRecurringDecimal.fractionToDecimal(5,3));
+        System.out.println(FractionRecurringDecimal.fractionToDecimal(1,3));
     }
 
     public static String fractionToDecimal(int numerator, int denominator) {
@@ -42,6 +42,7 @@ public class FractionRecurringDecimal {
         long divisor = Math.abs(Long.valueOf(denominator));
         fraction.append(String.valueOf(dividend / divisor));
         long remainder = dividend % divisor; //取余数
+        long sss = 1/3;
         if (remainder == 0) {
             return fraction.toString();
         }

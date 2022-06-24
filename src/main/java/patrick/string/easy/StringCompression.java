@@ -28,18 +28,18 @@ public class StringCompression {
      *         write: 记录应该在哪里写统计的个数，write = start+1的位置
      */
     public static int stringCompress(char[] chars){
-        int start=0,write=0;
-        for(int i=0; i<chars.length; i++){
-            if(i+1==chars.length || chars[i+1] != chars[i]) {
-                write = start+1;
-                if(i > start){
+        int left=0,write=0;
+        for(int right=0; right<chars.length; right++){
+            if(right+1==chars.length || chars[right+1] != chars[right]) {
+                write = left+1;
+                if(right > left){
                     //将统计个数转成char数组，以方便放进原数组中，如12，转成['1','2']
-                    char[] countChar = ("" + (i - start +1)).toCharArray();
+                    char[] countChar = ("" + (right - left +1)).toCharArray();
                     for(char c : countChar) {
                         chars[write++] = c;
                     }
                 }
-                start = i + 1;
+                left = right + 1;
             }
         }
         System.out.println(chars);

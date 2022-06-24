@@ -1,6 +1,9 @@
 package practice.java.datastructure.sorting;
 
+import javax.swing.tree.TreeNode;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Created by patrick on 6/14/2015.
@@ -13,6 +16,7 @@ import java.util.Arrays;
 public class QuickSort {
 
     public static void main(String [] args){
+        Queue<TreeNode> test = new LinkedList<TreeNode>();
         int [] unsorted = {49,38,65,97,76,13,27};
         //int[] unsorted = {23,43,11,25,50,65,67,55};
         quickSort(unsorted,0,unsorted.length-1);
@@ -42,5 +46,26 @@ public class QuickSort {
         System.out.printf("unsort array after pass %s: %n",  Arrays.toString(unsorted));
         unsorted[left] = pivotKey;
         return left;
+    }
+
+    public void quicksort2(int[] unsorted, int left ,int right){
+        if(left<right){
+            int partition = partition2(unsorted,left,right);
+            quicksort2(unsorted,left,partition);
+            quicksort2(unsorted,partition+1, right);
+        }
+    }
+
+    public int partition2(int[] unsorted, int left, int right){
+        int pivotkey = unsorted[left];
+        while(left<right){
+            while(left<right && unsorted[right]>=pivotkey) --right;
+            unsorted[left] = unsorted[right];
+            while(left<right && unsorted[left] <=pivotkey) ++ left;
+            unsorted[right] = unsorted[left];
+        }
+        unsorted[left] = pivotkey;
+        return left;
+
     }
 }

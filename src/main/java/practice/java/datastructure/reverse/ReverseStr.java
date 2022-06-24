@@ -12,6 +12,8 @@ public class ReverseStr {
         System.out.println(reverseStr.substring(1));
 
 
+        System.out.println(palindromTestByIteration("abcd"));
+
         System.out.println(""+ReverseStr.reverseInt(123));
     }
 

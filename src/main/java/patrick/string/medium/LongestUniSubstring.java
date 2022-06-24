@@ -49,12 +49,12 @@ public class LongestUniSubstring {
         int n = s.length(), ansLength = 0;
         Map<Character, Integer> map = new HashMap<>(); // current index of character
         // try to extend the range [i, j]
-        for (int i = 0, start = 0; i < n; i++) {
-            if (map.containsKey(s.charAt(i))) { //说明有重复字符，这时候start在指针要重新计算
-                start = Math.max(map.get(s.charAt(i)), start);
+        for (int right = 0, start = 0; right < n; right++) {
+            if (map.containsKey(s.charAt(right))) { //说明有重复字符，这时候start在指针要重新计算
+                start = Math.max(map.get(s.charAt(right)), start);
             }
-            ansLength = Math.max(ansLength, i - start + 1);
-            map.put(s.charAt(i), i + 1);
+            ansLength = Math.max(ansLength, right - start + 1);
+            map.put(s.charAt(right), right + 1);
         }
         return ansLength;
     }

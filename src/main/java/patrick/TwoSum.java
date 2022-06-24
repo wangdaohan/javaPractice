@@ -1,6 +1,7 @@
 package patrick;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,8 +26,82 @@ public class TwoSum {
     public static void main(String[] args) {
         TwoSum twoSum = new TwoSum();
         int[] nums = new int[]{2,11,15,7};
-        System.out.println(Arrays.toString(twoSum.twoSum(nums, 9)));
-        System.out.println(Arrays.toString(twoSum.twoSum2(nums, 9)));
+        //System.out.println(Arrays.toString(twoSum.twoSum(nums, 9)));
+        //System.out.println(Arrays.toString(twoSum.twoSum2(nums, 9)));
+        System.out.println(Arrays.deepToString(new TwoSum().calcPalin("aab".toCharArray())));
+        System.out.println(Arrays.deepToString(new TwoSum().calcPalin2("aab".toCharArray())));
+    }
+    boolean[][] calcPalin2(char[] s){
+        int n = s.length;
+        boolean[][] palin = new boolean[n][n];
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                palin[i][j] = false;
+            }
+        }
+
+        //for(int mid=0;mid<n;mid++){
+            int i,j,mid;
+        mid = n%2;
+            if((n%2)!=0) {
+
+                //对于字符串长度是奇数的，那么中心点是一个字符，所以i(向左）j（向右）都可以从中间mid开始
+                //如 a,b,c,d,e  -》 mid=2
+                i = j = mid;
+                while (i >= 0 && j < n && s[i] == s[j]) {
+                    palin[i][j] = true;
+                    --i;
+                    ++j;
+                }
+            } else {
+                //对于字符串长度是偶数的，那么中心点是没有字符，是一条线，所以i(向左）j（向右）分别从mid-1，mid开始
+                //如 a,b,c,d  -》 mid-1 = 1  mid=2
+                i = mid - 1;
+                j = mid;
+                while (i >= 0 && j < n && s[i] == s[j]) {
+                    palin[i][j] = true;
+                    --i;
+                    ++j;
+                }
+            }
+            // }
+        //}
+        return palin;
+    }
+    boolean[][] calcPalin(char[] s){
+        int n = s.length;
+        boolean[][] palin = new boolean[n][n];
+
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                palin[i][j] = false;
+            }
+        }
+        for(int mid=0;mid<n;mid++){
+            int i,j;
+            //if((n%2)!=0){
+
+            //对于字符串长度是奇数的，那么中心点是一个字符，所以i(向左）j（向右）都可以从中间mid开始
+            //如 a,b,c,d,e  -》 mid=2
+            i = j = mid;
+            while(i>=0 && j<n && s[i]==s[j]){
+                palin[i][j] = true;
+                --i;
+                ++j;
+            }
+            // } else{
+            //对于字符串长度是偶数的，那么中心点是没有字符，是一条线，所以i(向左）j（向右）分别从mid-1，mid开始
+            //如 a,b,c,d  -》 mid-1 = 1  mid=2
+            i=mid-1; j=mid;
+            while(i>=0 && j<n && s[i]==s[j]){
+                palin[i][j] = true;
+                --i;
+                ++j;
+            }
+            // }
+        }
+        return palin;
     }
 
     /*

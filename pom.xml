@@ -8,6 +8,11 @@
     <artifactId>java-pratice</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.2.1</version>
+        </dependency>
         <!-- START SERVLET -->
         <!-- https://mvnrepository.com/artifact/javax.xml.crypto/jsr105-api -->
         <dependency>
