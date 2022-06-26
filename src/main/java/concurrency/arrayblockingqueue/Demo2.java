@@ -1,4 +1,4 @@
-package concurrency.t2;
+package concurrency.arrayblockingqueue.t2;
 
 public class Demo2 implements Runnable {
     public static void main(String[] args) {

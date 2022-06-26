@@ -1,4 +1,4 @@
-package concurrency;
+package concurrency.arrayblockingqueue;
 
 public class NewThread implements  Runnable {
     public static void main(String[] args) {

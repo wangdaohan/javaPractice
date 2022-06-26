@@ -18,9 +18,8 @@ public class Consumer implements WorkHandler<Order> {
     @Override
     public void onEvent(Order order) throws Exception {
         Thread.sleep(1 * random.nextInt(10));
-        System.out.println("current consumer:"+this.consumerId+", consumer ID:"+order.getId());
+        System.out.println("current consumer:"+this.consumerId+", message ID:"+order.getId());
         count.incrementAndGet();
-
     }
 
     public int getCount(){

@@ -1,4 +1,4 @@
-package concurrency.t2;
+package concurrency.arrayblockingqueue.t2;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

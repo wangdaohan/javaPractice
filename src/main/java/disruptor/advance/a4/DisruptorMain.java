@@ -61,7 +61,7 @@ public class DisruptorMain {
         System.out.println("Thread created, start producing data");
         latch.countDown();
 
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         System.out.println("total task count:"+consumers[2].getCount());
     }
 
