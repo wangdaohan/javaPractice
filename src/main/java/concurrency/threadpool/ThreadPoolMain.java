@@ -1,7 +1,5 @@
 package concurrency.threadpool;
 
-import com.drew.imaging.tiff.TiffReader;
-
 import java.util.concurrent.*;
 
 /**
@@ -17,6 +15,8 @@ import java.util.concurrent.*;
  *     3. 如何设置合理线程池大小 -> 计算（CPU）密集型 与 IO密集型
  *                 计算（CPU）密集型 ——》线程池大小： CPU + 1
  *                 IO密集型(数据读取，存储，数据库, 特点：速度较慢， 线程池应稍大一点) -》线程池大小： CPU / （1 - 阻塞系数）   ——阻塞系数： 0。8-0。9之间  （ 8/（1-0。8） = 40
+ *
+ *      4。 如何正确使用线程池 -》以上3个点
  */
 public class ThreadPoolMain {
     public static void main(String[] args){
