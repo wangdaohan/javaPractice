@@ -4,43 +4,43 @@ package concurrency.aqs;
 import java.util.concurrent.locks.LockSupport;
 
 /**
- * AQSËø
- *   1¡£ReentrantLockÖØÈëËø - Condition / Lock
- *   2¡£ReentrantReadWriteLock¶ÁĞ´Ëø -
- *   3. ConditionÌõ¼şÅĞ¶Ï
- *   4¡£LockSupport»ùÓÚÏß³ÌµÄËø -
+ * AQSé”
+ *   1ã€‚ReentrantLocké‡å…¥é” - Condition / Lock
+ *   2ã€‚ReentrantReadWriteLockè¯»å†™é” -
+ *   3. Conditionæ¡ä»¶åˆ¤æ–­
+ *   4ã€‚LockSupportåŸºäºçº¿ç¨‹çš„é” -
  *
  *
  *
- * AQS¼Ü¹¹£ºAbstractQueuedSynchronizer
- *      ºËĞÄ
- *          1¡£ Ò»¸ö¹²ÏíµÄ×ÊÔ´ state (volatileĞŞÊÎ£©
- *          2¡£Ò»¸öÏÈ½øÏÈ³öµÄÏß³ÌµÈ´ı¶ÓÁĞ£¬Í·²¿½Úµã´ú±íÄÃµ½¹²Ïí×ÊÔ´£¬ÆäËü½ÚµãÔÚ¶ÓÁĞÖĞµÈ´ı
+ * AQSæ¶æ„ï¼šAbstractQueuedSynchronizer
+ *      æ ¸å¿ƒ
+ *          1ã€‚ ä¸€ä¸ªå…±äº«çš„èµ„æº state (volatileä¿®é¥°ï¼‰
+ *          2ã€‚ä¸€ä¸ªå…ˆè¿›å…ˆå‡ºçš„çº¿ç¨‹ç­‰å¾…é˜Ÿåˆ—ï¼Œå¤´éƒ¨èŠ‚ç‚¹ä»£è¡¨æ‹¿åˆ°å…±äº«èµ„æºï¼Œå…¶å®ƒèŠ‚ç‚¹åœ¨é˜Ÿåˆ—ä¸­ç­‰å¾…
  *
- *      AQS¶¨Òå2ÖÖ×ÊÔ´¹²Ïí·½·¨£º
- *          1. exclusive(¶ÀÕ¼£©
- *              ¾ßÌåAQSµÄÊµÏÖ£ºReentrantLock
- *          2. share£¨¹²Ïí£©
- *              ¾ßÌåAQSµÄÊµÏÖ£ºSemaphore , CountDownLatch
- *      ¹Ø¼ü·½·¨
- *          1¡£tryAcquire / tryRelease ¶ÀÕ¼µÄ·½Ê½³¢ÊÔ»ñÈ¡ºÍÊÍ·Å×ÊÔ´
- *          2¡£tryAcquireShared / tryReleaseShared ¹²Ïí·½Ê½³¢ÊÔ»ñÈ¡ºÍÊÍ·Å×ÊÔ´
+ *      AQSå®šä¹‰2ç§èµ„æºå…±äº«æ–¹æ³•ï¼š
+ *          1. exclusive(ç‹¬å ï¼‰
+ *              å…·ä½“AQSçš„å®ç°ï¼šReentrantLock
+ *          2. shareï¼ˆå…±äº«ï¼‰
+ *              å…·ä½“AQSçš„å®ç°ï¼šSemaphore , CountDownLatch
+ *      å…³é”®æ–¹æ³•
+ *          1ã€‚tryAcquire / tryRelease ç‹¬å çš„æ–¹å¼å°è¯•è·å–å’Œé‡Šæ”¾èµ„æº
+ *          2ã€‚tryAcquireShared / tryReleaseShared å…±äº«æ–¹å¼å°è¯•è·å–å’Œé‡Šæ”¾èµ„æº
  *
- *      ¾ßÌåAQSµÄÊµÏÖ - ReentrantLock´úÂë·ÖÎö
- *          1¡£ state³õÊ¼»¯Îª0£¬´ú±íÎ´Ëø¶¨×´Ì¬
- *          2¡£ AÏß³Ìlock()µÄÊ±ºò£¬»áµ÷ÓÃtryAcquire()¶ÀÕ¼¸ÃËø£¬²¢½«state+1
- *          3. ´Ëºó£¬ÆäËüÏß³ÌÔÙtryAcquire()Ê±¾Í»áÊ§°Ü£¬Ö±µ½AÏß³Ìunlock()µ½state=0ÎªÖ¹¡£
- *             ÕâÊ±£¬ÆäËüÏß³Ì²ÅÓĞ»ú»á»ñÈ¡Ëø
- *          4¡£ µ±È»£¬AÏß³ÌÔÚÊÍ·ÅËøÖ®Ç°£¬AÏß³Ì×Ô¼ºÊÇ¿ÉÒÔÖØ¸´»ñÈ¡Õâ¸öËøµÄ£¬ÕâÊ±state»áÀÛ¼Ó£¬Õâ¾ÍÊÇ¿ÉÖØÈëµÄ¸ÅÄî¡£
- *          5¡£ ×¢Òâ£¬Í¬Ò»¸öÏß³Ì»ñÈ¡¶àÉÙ´ÎËø£¬ÄÇÃ´ÊÍ·ÅµÄÊ±ºòÒ²ÒªÊÍ·ÅÍ¬Ñù¶à´Î£¬ÕâÑù²ÅÄÜ±£Ö¤stateÄÜ»Øµ½0¡£
+ *      å…·ä½“AQSçš„å®ç° - ReentrantLockä»£ç åˆ†æ
+ *          1ã€‚ stateåˆå§‹åŒ–ä¸º0ï¼Œä»£è¡¨æœªé”å®šçŠ¶æ€
+ *          2ã€‚ Açº¿ç¨‹lock()çš„æ—¶å€™ï¼Œä¼šè°ƒç”¨tryAcquire()ç‹¬å è¯¥é”ï¼Œå¹¶å°†state+1
+ *          3. æ­¤åï¼Œå…¶å®ƒçº¿ç¨‹å†tryAcquire()æ—¶å°±ä¼šå¤±è´¥ï¼Œç›´åˆ°Açº¿ç¨‹unlock()åˆ°state=0ä¸ºæ­¢ã€‚
+ *             è¿™æ—¶ï¼Œå…¶å®ƒçº¿ç¨‹æ‰æœ‰æœºä¼šè·å–é”
+ *          4ã€‚ å½“ç„¶ï¼ŒAçº¿ç¨‹åœ¨é‡Šæ”¾é”ä¹‹å‰ï¼ŒAçº¿ç¨‹è‡ªå·±æ˜¯å¯ä»¥é‡å¤è·å–è¿™ä¸ªé”çš„ï¼Œè¿™æ—¶stateä¼šç´¯åŠ ï¼Œè¿™å°±æ˜¯å¯é‡å…¥çš„æ¦‚å¿µã€‚
+ *          5ã€‚ æ³¨æ„ï¼ŒåŒä¸€ä¸ªçº¿ç¨‹è·å–å¤šå°‘æ¬¡é”ï¼Œé‚£ä¹ˆé‡Šæ”¾çš„æ—¶å€™ä¹Ÿè¦é‡Šæ”¾åŒæ ·å¤šæ¬¡ï¼Œè¿™æ ·æ‰èƒ½ä¿è¯stateèƒ½å›åˆ°0ã€‚
  */
 public class AQSMain {
     public static void main(String[] args) throws InterruptedException {
 
         /**
-         * 2.LockSupportµÄËø
-         *    ÓÅµã£º park() / unpark()¿ÉÒÔ²»·ÖÏÈºóË³Ğò
-         *         ´«Í³µÄwait()/notify()£¬Ò»¶¨ÊÇĞèÒªÏÈµÈwait()Ö´ĞĞÁË£¬²ÅÄÜÓÃnotify()»½ĞÑ
+         * 2.LockSupportçš„é”
+         *    ä¼˜ç‚¹ï¼š park() / unpark()å¯ä»¥ä¸åˆ†å…ˆåé¡ºåº
+         *         ä¼ ç»Ÿçš„wait()/notify()ï¼Œä¸€å®šæ˜¯éœ€è¦å…ˆç­‰wait()æ‰§è¡Œäº†ï¼Œæ‰èƒ½ç”¨notify()å”¤é†’
          */
         Thread A = new Thread(new Runnable() {
             @Override
@@ -54,8 +54,8 @@ public class AQSMain {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                //ºóÓÚunpark()Ö´ĞĞ
-                LockSupport.park();//¹ÒÆğ×èÈû,wait();
+                //åäºunpark()æ‰§è¡Œ
+                LockSupport.park();//æŒ‚èµ·é˜»å¡,wait();
                 System.out.println("sum:"+sum);
             }
         });
@@ -64,11 +64,11 @@ public class AQSMain {
 
         Thread.sleep(1000);
         System.out.println("notify print sum result");
-        //ÏÈÓÚunpark()Ö´ĞĞ
+        //å…ˆäºunpark()æ‰§è¡Œ
         LockSupport.unpark(A);
 
         /**
-         * 1.´«Í³µÄobject Ëø
+         * 1.ä¼ ç»Ÿçš„object é”
          */
         Object lock = new Object();
 
@@ -81,7 +81,7 @@ public class AQSMain {
 //                }
 //                synchronized (lock) {
 //                    try{
-//                        lock.wait(); // wait(); ÊÍ·ÅËø
+//                        lock.wait(); // wait(); é‡Šæ”¾é”
 //                    } catch (InterruptedException exception) {
 //                        exception.printStackTrace();
 //                    }
@@ -95,7 +95,7 @@ public class AQSMain {
 //        Thread.sleep(2000);
 //        System.out.println("notify print sum result");
 //        synchronized (lock) {
-//            lock.notify();  //notify();²»ÊÍ·ÅËø
+//            lock.notify();  //notify();ä¸é‡Šæ”¾é”
 //        }
 
     }
