@@ -30,9 +30,12 @@ public class DisruptorMain {
         OrderEventProducer orderEventProducer = new OrderEventProducer(ringBuffer);
         ByteBuffer bb = ByteBuffer.allocate(8);
         for(long i = 0; i < 100; i++){
+            System.out.println("producing");
             bb.putLong(0, i);
             orderEventProducer.sendData(bb);
         }
+
+        System.out.println("produced");
         disruptor.shutdown();
         executorService.shutdown();
     }
