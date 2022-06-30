@@ -53,7 +53,7 @@ abstract class RingBufferFields<E> extends RingBufferPad
     }
 
     private final long indexMask;
-    private final Object[] entries;
+    private final Object[] entries; //RingBuffer数据存储
     protected final int bufferSize;
     protected final Sequencer sequencer;
 
@@ -74,9 +74,12 @@ abstract class RingBufferFields<E> extends RingBufferPad
 
         this.indexMask = bufferSize - 1;
         this.entries   = new Object[sequencer.getBufferSize() + 2 * BUFFER_PAD];
-        fill(eventFactory);
+        fill(eventFactory); //内存预加载
     }
 
+    /**
+     * 内存预加载机制的实现
+     */
     private void fill(EventFactory<E> eventFactory)
     {
         for (int i = 0; i < bufferSize; i++)

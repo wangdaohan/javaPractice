@@ -43,7 +43,7 @@ class RhsPadding extends Value
  * <p>Also attempts to be more efficient with regards to false
  * sharing by adding padding around the volatile field.
  */
-public class Sequence extends RhsPadding
+public class Sequence extends RhsPadding //
 {
     static final long INITIAL_VALUE = -1L;
     private static final Unsafe UNSAFE;
