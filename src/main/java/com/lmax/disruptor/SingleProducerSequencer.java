@@ -117,6 +117,7 @@ public final class SingleProducerSequencer extends SingleProducerSequencerFields
 
         /**
          * wrapPoint是用来判断当前产生的新生产者的序号是否超出了ringBuffer长度，>0为超出， <=0,未超出
+         */
         // bufferSize为RingBuffer长度,假设为10 -》 wrapPoint = 0 - 10 = -10
         long wrapPoint = nextSequence - bufferSize;
         /**
