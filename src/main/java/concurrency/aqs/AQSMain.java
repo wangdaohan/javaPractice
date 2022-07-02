@@ -54,8 +54,10 @@ public class AQSMain {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                //后于unpark()执行
+                //后于unpark()执行,也是没有问题的。
                 LockSupport.park();//挂起阻塞,wait();
+
+                LockSupport.parkNanos(1l);
                 System.out.println("sum:"+sum);
             }
         });
@@ -64,7 +66,7 @@ public class AQSMain {
 
         Thread.sleep(1000);
         System.out.println("notify print sum result");
-        //先于unpark()执行
+        //先于park()执行,也是没有问题的。
         LockSupport.unpark(A);
 
         /**

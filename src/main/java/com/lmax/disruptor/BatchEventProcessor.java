@@ -33,7 +33,7 @@ public final class BatchEventProcessor<T>
     private final AtomicBoolean running = new AtomicBoolean(false);
     private ExceptionHandler<? super T> exceptionHandler = new FatalExceptionHandler();
     private final DataProvider<T> dataProvider;
-    private final SequenceBarrier sequenceBarrier;
+    private final SequenceBarrier sequenceBarrier; //序号栅栏：维护消费者和生产者的序号，保持不冲突
     private final EventHandler<? super T> eventHandler;
     private final Sequence sequence = new Sequence(Sequencer.INITIAL_CURSOR_VALUE);
     private final TimeoutHandler timeoutHandler;
@@ -68,6 +68,9 @@ public final class BatchEventProcessor<T>
         return sequence;
     }
 
+    /**
+     * halt:阻断
+     */
     @Override
     public void halt()
     {

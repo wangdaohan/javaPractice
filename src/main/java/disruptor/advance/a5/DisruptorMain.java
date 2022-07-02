@@ -66,9 +66,22 @@ public class DisruptorMain {
      *     2。 JAVA原生代码中也有类似的实现  - @Contended （添加后默认不生效，必须jvm启动十加 -XX:-RestrictContended）
      *                                   -并发包下很多也用到了类似技术 CounterCell
      */
-    @Contended
+    //@Contended
       Sequence sequence;
 
+    /**
+     *     1.5 高性能之道 - 算法优化 - 序号栅栏机制      ->    序号栅栏和序号配合使用来消除锁和CAS
+     *          我们在生产者进行投递Event的时候，总是会使用：ringBuffer.next()获取下一个可用序列号；
+     *
+     *      在Disruptor3.0中，序号栅栏SequenceBarrier和序号Sequence搭配使用，主要用于协调和管理消费者与生产者的工作节奏，避免了去使用锁和CAS
+     *                       各个消费者和生产者都持有自己的序号，这些序号的变化必须满足以下基本条件：
+     *                           a. 消费者持有的序号必须小于生产者的序号
+     *                           b. 消费者序号的数值必须小于其前置（依赖关系）消费者的序号数值
+     *                           c. 生产者序号数值不能大于消费者中最小的序号数值  - 以避免生产者速度过快，将还未来得及消费的消息覆盖
+     *
+     */
+    RingBuffer<Object> testRingBuffer2;
+    //testRingBuffer2.next();  -》SingleProducerSequencer
 
 
 }

@@ -101,27 +101,50 @@ public final class SingleProducerSequencer extends SingleProducerSequencerFields
      * @see Sequencer#next(int)
      */
     @Override
-    public long next(int n)
+    public long next(int n)  // next(1) -> n = 1
     {
+        // sequence初始值（即nextValue初始值）是-1
+        // nextValue + n 为新的sequence值
         if (n < 1)
         {
             throw new IllegalArgumentException("n must be > 0");
         }
 
-        long nextValue = this.nextValue;
+        long nextValue = this.nextValue; // 语义级别变量 - nextValue为SingleProducerSequencer的变量
 
+        // nextSequence = -1 + 1; ->  0
         long nextSequence = nextValue + n;
+
+        /**
+         * wrapPoint是用来判断当前产生的新生产者的序号是否超出了ringBuffer长度，>0为超出， <=0,未超出
+        // bufferSize为RingBuffer长度,假设为10 -》 wrapPoint = 0 - 10 = -10
         long wrapPoint = nextSequence - bufferSize;
+        /**
+         * cachedValue初始值也是-1
+         * cachedGatingSequence -> 未知用法，语义上来说是用于缓存优化
+         */
         long cachedGatingSequence = this.cachedValue;
 
+        /**
+         *  wrapPoint > cachedGatingSequence ??
+         */
         if (wrapPoint > cachedGatingSequence || cachedGatingSequence > nextValue)
         {
-            long minSequence;
+            long minSequence; //最小消费者的序号  －＞满足：c. 生产者序号数值不能大于消费者中最小的序号数值
+            //自旋操作
+            /**
+             * 本段代码：Util.getMinimumSequence(gatingSequences, nextValue) -> 用于找到消费者中的最小序号值
+             *
+             * 本段逻辑：
+             *     如果你的生产者序号大于消费者中最小的序号，那么就挂起并自旋操作
+             *
+             * 以满足：c. 生产者序号数值不能大于消费者中最小的序号数值
+             */
             while (wrapPoint > (minSequence = Util.getMinimumSequence(gatingSequences, nextValue)))
             {
-                LockSupport.parkNanos(1L); // TODO: Use waitStrategy to spin?
+                LockSupport.parkNanos(1L); // 挂起线程 - TODO: Use waitStrategy to spin?
             }
-
+            //cachedValue接收了最小的消费者序号
             this.cachedValue = minSequence;
         }
 
