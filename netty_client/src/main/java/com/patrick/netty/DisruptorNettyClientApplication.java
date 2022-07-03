@@ -1,6 +1,7 @@
 package com.patrick.netty;
 
 import com.lmax.disruptor.BlockingWaitStrategy;
+import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.patrick.netty.client.MessageConsumerImplForClient;
 import com.patrick.netty.client.NettyClient;
@@ -19,7 +20,10 @@ public class DisruptorNettyClientApplication {
 		for(int i=0;i<consumers.length;i++) {
 			consumers[i] = new MessageConsumerImplForClient("code:client:consumer:"+i);
 		}
-		RingBufferWorkerPoolFactory.getInstance().initAndStart(ProducerType.MULTI, 1024 * 1024, new BlockingWaitStrategy(), consumers);
+
+		//new YieldingWaitStrategy() 性能最高，但CPU使用率很高
+		//new BlockingWaitStrategy  性能最低，但CPU占用最低
+		RingBufferWorkerPoolFactory.getInstance().initAndStart(ProducerType.MULTI, 1024 * 1024, new YieldingWaitStrategy(), consumers);
 
 		NettyClient client = new NettyClient();
 		client.sendData();
