@@ -19,7 +19,7 @@ public class DisruptorNettyClientApplication {
 		for(int i=0;i<consumers.length;i++) {
 			consumers[i] = new MessageConsumerImplForClient("code:client:consumer:"+i);
 		}
-		RingBufferWorkerPoolFactory.getInstance().initAndStart(ProducerType.SINGLE, 1024, new BlockingWaitStrategy(), consumers);
+		RingBufferWorkerPoolFactory.getInstance().initAndStart(ProducerType.MULTI, 1024 * 1024, new BlockingWaitStrategy(), consumers);
 
 		NettyClient client = new NettyClient();
 		client.sendData();
