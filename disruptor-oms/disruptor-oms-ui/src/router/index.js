@@ -55,6 +55,12 @@ const routes = [
         component: () => import( '../views/HisTradeQuery.vue'),
         meta: {requireAuth: false}
       },
+      {
+        //历史成交
+        path: '/buy',
+        component: () => import( '../views/Buy.vue'),
+        meta: {requireAuth: false}
+      },
     ]
   },
   {

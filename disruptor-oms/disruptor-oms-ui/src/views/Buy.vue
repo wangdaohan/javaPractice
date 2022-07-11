@@ -11,12 +11,15 @@
     <el-card shadow="hover" class="container">
       <el-row>
         <el-col :span="12">
+          <!-- 委托组件 -->
           <order-widget :direction="0"/>
         </el-col>
         <el-col :span="12">
+          <!-- 订单簿组件 -->
           <order-book/>
         </el-col>
       </el-row>
+      <!-- 持仓组件 -->
       <posi-list/>
     </el-card>
 
@@ -27,7 +30,6 @@
 
 import OrderWidget from "../components/OrderWidget";
 import OrderBook from "../components/OrderBook";
-
 import PosiList from "../components/PosiList";
 
 
