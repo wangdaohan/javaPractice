@@ -1,0 +1,26 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    url: jdbc:sqlite:d:/test.db
+    driver-class-name: org.sqlite.JDBC
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 6000ms
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+mybatis-plus:
+  configuration:
+    jdbc-type-for-null: 'null'
+
+cacheexpire:
+  captcha: 100
+  account: 3600
+  order: 36000
+
+counter:
+  dataCenterId: 0
+  workerId: 0
+  #机房ID  - 为生成全局唯一ID
+  #机柜ID
