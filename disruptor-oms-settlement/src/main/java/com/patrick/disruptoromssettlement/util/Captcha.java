@@ -37,6 +37,7 @@ public class Captcha {
         g.setColor(getRandomColor(200, 250));
         g.fillRect(0, 0, width, height);
         Font font = new Font("Fixedsys", Font.BOLD, height - 5);
+        g.setFont(font);
 
         //3。生成干扰线 噪点
         for ( int i=0; i < lineCount; i++) {

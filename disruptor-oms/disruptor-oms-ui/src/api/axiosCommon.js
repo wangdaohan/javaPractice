@@ -48,6 +48,11 @@ export const reqRealEndAsync = (method, baseUrl, url, params, callback) => {
             if (callback != undefined) {
                 callback(result.code, result.message, result.data);
             }
+        } else if(result.code == 2) {
+            //验证失败
+            if (callback != undefined) {
+                callback(result.code, result.message, result.data);
+            }
         }
         // else {
         //     console.error(result);

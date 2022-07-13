@@ -121,10 +121,10 @@ export default {
           this.logining = false;
           this.$router.push({path : '/dashboard'});
           //成交 委托 持仓查询
-          // queryBalance();
-          // queryOrder();
-          // queryTrade();
-          // queryPosi();
+          queryBalance();
+          queryOrder();
+          queryTrade();
+          queryPosi();
         }, 1000);
 
       }
@@ -134,6 +134,7 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.logining = true;
+          console.log("md5:"+encryptMD5(this.ruleForm.password));
           login({
             uid: this.ruleForm.uid,
             password: encryptMD5(this.ruleForm.password),

@@ -55,8 +55,14 @@ export default {
   // },
   data(){
     return {
-      username: 'guest',
+      //username: 'guest', //转成计算属性 -> computed: {  username(){} }
       collapsed: true,
+    }
+  },
+  computed: {
+    username(){
+      let acc = sessionStorage.getItem("uid");
+      return acc ? acc : 'guest'
     }
   },
   methods:{
