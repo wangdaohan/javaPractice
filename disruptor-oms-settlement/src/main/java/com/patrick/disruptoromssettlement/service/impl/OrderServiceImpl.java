@@ -1,8 +1,13 @@
 package com.patrick.disruptoromssettlement.service.impl;
 
+import com.patrick.disruptoromssettlement.bean.order.CmdType;
+import com.patrick.disruptoromssettlement.bean.order.OrderCmd;
+import com.patrick.disruptoromssettlement.bean.order.OrderDirection;
+import com.patrick.disruptoromssettlement.bean.order.OrderType;
 import com.patrick.disruptoromssettlement.bean.res.OrderInfo;
 import com.patrick.disruptoromssettlement.bean.res.PosiInfo;
 import com.patrick.disruptoromssettlement.bean.res.TradeInfo;
+import com.patrick.disruptoromssettlement.config.AppConfig;
 import com.patrick.disruptoromssettlement.service.IOrderService;
 import com.patrick.disruptoromssettlement.util.DbUtil;
 import lombok.extern.log4j.Log4j2;
@@ -34,34 +39,34 @@ public class OrderServiceImpl implements IOrderService {
         return DbUtil.getTradeList(uid);
     }
 
-//    @Autowired
-//    private CounterConfig config;
-//
-//    @Override
-//    public boolean sendOrder(long uid, short type, long timestamp, int code,
-//                             byte direction, long price, long volume, byte ordertype) {
-//        final OrderCmd orderCmd = OrderCmd.builder()
-//                .type(CmdType.of(type))
-//                .timestamp(timestamp)
-//                .mid(config.getId())
-//                .uid(uid)
-//                .code(code)
-//                .direction(OrderDirection.of(ordertype))
-//                .price(price)
-//                .volume(volume)
-//                .orderType(OrderType.of(ordertype))
-//                .build();
-//
-//        //1.入库
-//        int oid = DbUtil.saveOrder(orderCmd);
-//        if(oid < 0){
-//            return false;
-//        }else {
-//            //TODO 发送网关
-//            log.info(orderCmd);
-//            return true;
-//        }
-//
-//
-//    }
+    @Autowired
+    private AppConfig config;
+
+    @Override
+    public boolean sendOrder(long uid, short type, long timestamp, int code,
+                             byte direction, long price, long volume, byte ordertype) {
+        final OrderCmd orderCmd = OrderCmd.builder()
+                .type(CmdType.of(type))
+                .timestamp(timestamp)
+                .mid(config.getId())
+                .uid(uid)
+                .code(code)
+                .direction(OrderDirection.of(ordertype))
+                .price(price)
+                .volume(volume)
+                .orderType(OrderType.of(ordertype))
+                .build();
+
+        //1.入库
+        int oid = DbUtil.saveOrder(orderCmd);
+        if(oid < 0){
+            return false;
+        }else {
+            //TODO 发送网关
+            log.info(orderCmd);
+            return true;
+        }
+
+
+    }
 }

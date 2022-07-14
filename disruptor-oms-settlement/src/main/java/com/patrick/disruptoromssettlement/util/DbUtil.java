@@ -2,6 +2,9 @@ package com.patrick.disruptoromssettlement.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.patrick.disruptoromssettlement.bean.order.OrderCmd;
+import com.patrick.disruptoromssettlement.bean.order.OrderStatus;
 import com.patrick.disruptoromssettlement.bean.res.Account;
 import com.patrick.disruptoromssettlement.bean.res.OrderInfo;
 import com.patrick.disruptoromssettlement.bean.res.PosiInfo;
@@ -154,30 +157,30 @@ public class DbUtil {
     }
 
     //////////////////////////////订单处理类///////////////////////////////////////
-//    public static int saveOrder(OrderCmd orderCmd){
-//        Map<String, Object> param = Maps.newHashMap();
-//        param.put("UId",orderCmd.uid);
-//        param.put("Code",orderCmd.code);
-//        param.put("Direction",orderCmd.direction.getDirection());
-//        param.put("Type",orderCmd.orderType.getType());
-//        param.put("Price",orderCmd.price);
-//        param.put("OCount",orderCmd.volume);
-//        param.put("TCount",0);
-//        param.put("Status", OrderStatus.NOT_SET.getCode());
-//
-//        param.put("Data",TimeformatUtil.yyyyMMdd(orderCmd.timestamp));
-//        param.put("Time",TimeformatUtil.hhMMss(orderCmd.timestamp));
-//
-//        int count = dbUtil.getSqlSessionTemplate().insert(
-//                "orderMapper.saveOrder",param
-//        );
-//        //判断是否成功
-//        if(count > 0){
-//            return Integer.parseInt(param.get("ID").toString());
-//        }else {
-//            return -1;
-//        }
-//    }
+    public static int saveOrder(OrderCmd orderCmd){
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("UId",orderCmd.uid);
+        param.put("Code",orderCmd.code);
+        param.put("Direction",orderCmd.direction.getDirection());
+        param.put("Type",orderCmd.orderType.getType());
+        param.put("Price",orderCmd.price);
+        param.put("OCount",orderCmd.volume);
+        param.put("TCount",0);
+        param.put("Status", OrderStatus.NOT_SET.getCode());
+
+        param.put("Data",TimeformatUtil.yyyyMMdd(orderCmd.timestamp));
+        param.put("Time",TimeformatUtil.hhMMss(orderCmd.timestamp));
+
+        int count = dbUtil.getSqlSessionTemplate().insert(
+                "orderMapper.saveOrder",param
+        );
+        //判断是否成功
+        if(count > 0){
+            return Integer.parseInt(param.get("ID").toString());
+        }else {
+            return -1;
+        }
+    }
 
 
 

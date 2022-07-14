@@ -24,3 +24,4 @@ counter:
   workerId: 0
   #机房ID  - 为生成全局唯一ID
   #机柜ID
+  memberid: 0

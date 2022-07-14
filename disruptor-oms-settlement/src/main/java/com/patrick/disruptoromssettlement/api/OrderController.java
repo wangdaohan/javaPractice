@@ -1,6 +1,7 @@
 package com.patrick.disruptoromssettlement.api;
 
 import com.patrick.disruptoromssettlement.bean.res.*;
+import com.patrick.disruptoromssettlement.cache.StockCache;
 import com.patrick.disruptoromssettlement.service.IOrderService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +21,14 @@ import static com.patrick.disruptoromssettlement.bean.res.CounterRes.SUCCESS;
 @Log4j2
 public class OrderController {
 
-//    @Autowired
-//    private StockCache stockCache;
-//
-//    @RequestMapping("/code")
-//    public CounterRes sotckQuery(@RequestParam String key){
-//        Collection<StockInfo> stocks = stockCache.getStocks(key);
-//        return new CounterRes(stocks);
-//    }
+    @Autowired
+    private StockCache stockCache;
 
+    @RequestMapping("/code")
+    public CounterRes sotckQuery(@RequestParam String key){
+        Collection<StockInfo> stocks = stockCache.getStocks(key);
+        return new CounterRes(stocks);
+    }
 
     @Autowired
     private IOrderService orderService;
@@ -62,24 +62,24 @@ public class OrderController {
         return new CounterRes(tradeList);
     }
 
-//    @RequestMapping("/sendorder")
-//    public CounterRes order(
-//            @RequestParam int uid,
-//            @RequestParam short type,
-//            @RequestParam long timestamp,
-//            @RequestParam int code,
-//            @RequestParam byte direction,
-//            @RequestParam long price,
-//            @RequestParam long volume,
-//            @RequestParam byte ordertype
-//    ){
-//        if(orderService.sendOrder(uid,type,timestamp,code,direction,price,
-//                volume,ordertype)){
-//            return new CounterRes(SUCCESS,"save success",null);
-//        }else {
-//            return new CounterRes(FAIL,"save failed",null);
-//        }
-//
-//    }
+    @RequestMapping("/sendorder")
+    public CounterRes order(
+            @RequestParam int uid,
+            @RequestParam short type,
+            @RequestParam long timestamp,
+            @RequestParam int code,
+            @RequestParam byte direction,
+            @RequestParam long price,
+            @RequestParam long volume,
+            @RequestParam byte ordertype
+    ){
+        if(orderService.sendOrder(uid,type,timestamp,code,direction,price,
+                volume,ordertype)){
+            return new CounterRes(SUCCESS,"save success",null);
+        }else {
+            return new CounterRes(FAIL,"save failed",null);
+        }
+
+    }
 
 }

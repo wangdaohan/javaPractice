@@ -8,10 +8,16 @@ import org.springframework.stereotype.Component;
 @Data
 public class AppConfig {
 
+    /////////////////////UUID 相关配置////////////////////////////////
     @Value("${counter.dataCenterId}")
     private long dataCenterId;
+
     @Value("${counter.workerId}")
     private long workerId;
+    /////////////////////////////////////////////////////
 
+    /////////////////////交易所会员号////////////////////////////////
+    @Value("${counter.memberid}")
+    private short id;
 
 }

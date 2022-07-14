@@ -1,6 +1,7 @@
 package com.patrick.disruptoromssettlement;
 
 import com.patrick.disruptoromssettlement.config.AppConfig;
+import com.patrick.disruptoromssettlement.util.DbUtil;
 import com.patrick.disruptoromssettlement.uuid.GudyUuid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +11,9 @@ import javax.annotation.PostConstruct;
 
 @SpringBootApplication
 public class DisruptorOmsSettlementApplication {
+
+	@Autowired
+	private DbUtil dbUtil;
 
 	public static void main(String[] args) {
 		SpringApplication.run(DisruptorOmsSettlementApplication.class, args);
