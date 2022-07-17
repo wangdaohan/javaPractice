@@ -1,4 +1,4 @@
-package com.patrick.disruptoromssettlement.bean.order;
+package com.client.bean.order;
 
 import lombok.Getter;
 

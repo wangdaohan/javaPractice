@@ -11,8 +11,35 @@
         select t.id, t.uid, t.code, s.name,t.cost, t.count
         from t_posi t, t_stock s
         where t.uid = #{UId, jdbcType=BIGINT}
+            <if test="Code !=null and Code != ''">
+                and t.code = #{Code, jdbcType=INTEGER}
+            </if>
             and t.code = s.code
     </select>
+
+    <update id="updatePosi" parameterType="Map">
+        update t_posi
+            set count = #{Count, jdbcType=BIGINT},
+                cost = #{Cost, jdbcType=BIGINT}
+        where uid = #{UId, jdbcType=BIGINT}
+            and code = #{Code, jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertPosi" parameterType="Map">
+        insert into
+            t_posi(
+                   uid,
+                   code,
+                   cost,
+                   count,
+                   ) values {
+                   #{UId},
+                   #{Code},
+                   #{Cost},
+                   #{Count}
+                   }
+    </insert>
+
     <select id="queryOrder" resultType="com.patrick.disruptoromssettlement.bean.res.OrderInfo">
         select t.id, t.uid, t.code, s.name, t.direction, t.type, t.price,  t.ocount, t.status, t.date, t.time
         from t_order t, t_stock s
@@ -30,7 +57,7 @@
 
     <insert id="saveOrder" parameterType="Map">
         insert into
-            t_order(
+            t_order (
                     uid,
                     code,
                     direction,
@@ -40,7 +67,7 @@
                     status,
                     date,
                     time
-            )values (
+            ) values (
                      #{UId},
                      #{Code},
                      #{Direction},
@@ -49,11 +76,16 @@
                      #{OCount},
                      #{Status},
                      #{Date},
-                     #{Time},
+                     #{Time}
              )
         <selectKey keyColumn="id" resultType="int" keyProperty="ID" order="AFTER">
             select last_insert_rowid()
         </selectKey>
     </insert>
+
+    <update id="updateBalance" parameterType="Map">
+        update t_user set balance=balance + #{Balance, jdbcType=BIGINT}
+        where uid = #{UId, jdbcType=BIGINT}
+    </update>
 
 </mapper>

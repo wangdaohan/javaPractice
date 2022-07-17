@@ -25,3 +25,11 @@ counter:
   #机房ID  - 为生成全局唯一ID
   #机柜ID
   memberid: 0
+  checksum: com.client.checksum.CheckSum
+  bodycodec: com.client.codec.BodyCodec
+  msgcodec: com.client.codec.MsgCodec
+
+gateway:
+  senderIp: 127.0.0.1
+  senderPort: 8091
+  gatewayId: 1001

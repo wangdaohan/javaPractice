@@ -20,6 +20,7 @@ export default createStore({
       state.tradeData = tradeData;
     },
     updateBalance(state, balance) {
+      console.log("set state.balance " + balance);
       state.balance = balance;
     },
   },

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.patrick.disruptoromssettlement.bean.order;
+package com.client.bean.order;
 
 import lombok.Getter;
 

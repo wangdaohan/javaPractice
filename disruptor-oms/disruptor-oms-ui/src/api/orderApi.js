@@ -10,7 +10,8 @@ export const queryBalance = () => {
         '/api/balance',
         {uid: sessionStorage.getItem('uid')},
         (code, msg, data) => {
-            store.state.posiData = data;
+        console.log("queryBalance:"+data);
+            store.state.balance = data;
             store.commit("updateBalance", data)
         })
 };
@@ -21,6 +22,7 @@ export const queryPosi = () => {
         '/api/posiinfo',
         {uid: sessionStorage.getItem('uid')},
         (code, msg, data) => {
+            console.log("queryPosi:"+data);
             store.state.posiData = data;
             store.commit("updatePosi", data)
         })

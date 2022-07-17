@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
     public CounterRes exceptionHandler(
             HttpServletRequest request,Exception e
     ){
+        e.printStackTrace();
         log.error(e);
         return new CounterRes(CounterRes.FAIL,
                 "发生错误",
