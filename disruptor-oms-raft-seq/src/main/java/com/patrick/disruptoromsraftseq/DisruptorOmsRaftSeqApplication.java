@@ -19,7 +19,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DisruptorOmsRaftSeqApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DisruptorOmsRaftSeqApplication.class, args);
+		//Main class -> RaftSeqStartUp1 RaftSeqStartUp2 RaftSeqStartUp3
+		//SpringApplication.run(DisruptorOmsRaftSeqApplication.class, args);
 	}
 
 }

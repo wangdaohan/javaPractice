@@ -1,7 +1,12 @@
 package com.example.disruptoromsgateway;
 
+
+import com.alipay.sofa.rpc.config.ProviderConfig;
+import com.alipay.sofa.rpc.config.ServerConfig;
+import com.client.bean.OrderCmdContainer;
 import com.client.checksum.ICheckSum;
 import com.client.codec.IBodyCodec;
+import com.client.fetch.IFetchService;
 import com.example.disruptoromsgateway.handler.ConnHandler;
 import io.vertx.core.Vertx;
 import io.vertx.core.net.NetServer;
@@ -22,6 +27,9 @@ public class GatewayConfig {
     //端口
     private int recvPort;
 
+    //排队机 抓取服务端口
+    private int fetchServPort;
+
     //TODO 柜台列表 数据库连接
 
     private IBodyCodec bodyCodec;
@@ -40,7 +48,10 @@ public class GatewayConfig {
         //网关ID
         id = Short.parseShort(root.elementText("id"));
 
-        log.info("GateWay id:{}, port:{}", id, recvPort);
+        //排队机 抓取服务端口
+        fetchServPort = Integer.parseInt(root.elementText("fetchservport"));
+
+        log.info("GateWay id:{}, port:{}, fetchServPort:{}", id, recvPort, fetchServPort);
         //TODO 柜台列表 数据库连接
     }
 
@@ -49,7 +60,22 @@ public class GatewayConfig {
         //1.启动TCP服务监听
         initRecv();
 
-        //TODO 2.排队机交互
+        //2.排队机交互
+       initFetchServ();
+    }
+
+    private void initFetchServ() {
+        ServerConfig rpcConfig = new ServerConfig()
+                .setPort(fetchServPort)
+                .setProtocol("bolt");
+        ProviderConfig<IFetchService> providerConfig = new ProviderConfig<IFetchService>()
+                .setInterfaceId(IFetchService.class.getName())  //对外提供服务的RPC接口
+                .setRef(() -> OrderCmdContainer.getInstance().getAll())//对外提供服务的RPC实现
+                .setServer(rpcConfig);
+
+        providerConfig.export();
+
+        log.info("gateway startup fetchServ success at port : {}",fetchServPort);
     }
 
     private void initRecv() {

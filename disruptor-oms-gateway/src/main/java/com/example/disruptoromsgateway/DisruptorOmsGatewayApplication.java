@@ -13,9 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class DisruptorOmsGatewayApplication {
-
+	//Main Class -> GatewayStartup
 	public static void main(String[] args) {
-		SpringApplication.run(DisruptorOmsGatewayApplication.class, args);
+		//Main Class -> GatewayStartup
+		//SpringApplication.run(DisruptorOmsGatewayApplication.class, args);
 	}
 
 }

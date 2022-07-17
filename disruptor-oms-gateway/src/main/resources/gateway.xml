@@ -2,4 +2,6 @@
 <gateway>
     <id>1001</id>
     <recvport>8091</recvport>
+    <!-- 排队机 抓取服务端口-->
+    <fetchservport>8890</fetchservport>
 </gateway>
