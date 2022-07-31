@@ -3,6 +3,7 @@ package com.patrick.disruptoromssettlement.config;
 import com.client.checksum.ICheckSum;
 import com.client.codec.IBodyCodec;
 import com.client.codec.IMsgCodec;
+import com.patrick.disruptoromssettlement.bean.MqttBusConsumer;
 import io.vertx.core.Vertx;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -85,6 +86,9 @@ public class AppConfig {
         } catch (Exception e) {
             log.error("init config error", e);
         }
+
+        //初始化总线连接
+        new MqttBusConsumer(subBusIp, subBusPort, String.valueOf(id), msgCodec, checkSum, vertx).startup();
 
     }
 

@@ -2,6 +2,7 @@ package com.patrick.disruptoromssettlement.bean;
 
 import com.client.bean.msg.CommonMsg;
 import com.client.checksum.ICheckSum;
+import com.client.codec.IMsgCodec;
 import com.client.codec.MsgCodec;
 import com.google.common.collect.Maps;
 import io.netty.handler.codec.mqtt.MqttQoS;
@@ -44,7 +45,7 @@ public class MqttBusConsumer {
     private final static String HQ_ADDR = "-1";
 
     @NonNull
-    private MsgCodec msgCodec;
+    private IMsgCodec msgCodec;
 
     @NonNull
     private ICheckSum cs;

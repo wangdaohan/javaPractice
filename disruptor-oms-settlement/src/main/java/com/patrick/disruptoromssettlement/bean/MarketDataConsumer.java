@@ -3,6 +3,7 @@ package com.patrick.disruptoromssettlement.bean;
 
 import com.client.hq.L1MarketData;
 import com.patrick.disruptoromssettlement.config.AppConfig;
+import com.patrick.disruptoromssettlement.util.JsonUtil;
 import io.netty.handler.codec.CodecException;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
@@ -16,6 +17,7 @@ import javax.annotation.PostConstruct;
 
 
 import static com.patrick.disruptoromssettlement.bean.MqttBusConsumer.INNER_MARKET_DATA_CACHE_ADDR;
+import static com.patrick.disruptoromssettlement.config.WebSocketConfig.L1_MARKET_DATA_PREFIX;
 
 @Log4j2
 @Component
@@ -56,5 +58,12 @@ public class MarketDataConsumer {
                 }
             }
         });
+
+        eventBus.consumer(L1_MARKET_DATA_PREFIX)
+                .handler(h -> {
+                    int code = Integer.parseInt(h.headers().get("code"));
+                    L1MarketData data = l1Cache.get(code);
+                    h.reply(JsonUtil.toJson(data));
+                });
     }
 }

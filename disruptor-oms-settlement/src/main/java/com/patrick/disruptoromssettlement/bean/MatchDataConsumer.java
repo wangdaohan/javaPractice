@@ -4,9 +4,11 @@ package com.patrick.disruptoromssettlement.bean;
 import com.client.bean.order.OrderCmd;
 import com.client.bean.order.OrderStatus;
 import com.client.hq.MatchData;
+import com.google.common.collect.ImmutableMap;
 import com.patrick.disruptoromssettlement.config.AppConfig;
 import com.patrick.disruptoromssettlement.util.DbUtil;
 import com.patrick.disruptoromssettlement.util.IDConverter;
+import com.patrick.disruptoromssettlement.util.JsonUtil;
 import io.netty.util.collection.LongObjectHashMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.eventbus.EventBus;
@@ -28,12 +30,13 @@ import static com.client.bean.order.OrderDirection.SELL;
 import static com.client.bean.order.OrderStatus.CANCEL_ED;
 import static com.client.bean.order.OrderStatus.PART_CANCEL;
 import static com.patrick.disruptoromssettlement.bean.MqttBusConsumer.*;
-
+import static com.patrick.disruptoromssettlement.config.WebSocketConfig.*;
 
 
 @Log4j2
 @Component
 public class MatchDataConsumer {
+    public static final String ORDER_DATA_CACHE_ADDR = "order_data_cache_addr";
 
     @Autowired
     private AppConfig config;
@@ -101,6 +104,18 @@ public class MatchDataConsumer {
                 }
 
             }
+
+            //通知客户端 成交的更新
+            //通知委托终端
+            config.getVertx().eventBus().publish(
+                    TRADE_NOTIFY_ADDR_PREFIX + orderCmd.uid,
+                    JsonUtil.toJson(
+                            ImmutableMap.of("code", orderCmd.code,
+                                    "direction", orderCmd.direction,
+                                    "volume", md.volume
+                                    )
+                    )
+            );
         }
         // 委托变动
         //根据最后一笔Match处理委托
@@ -114,13 +129,16 @@ public class MatchDataConsumer {
                 DbUtil.addBalance(orderCmd.uid, -(orderCmd.price * finalMatchData.volume));
             } else if (orderCmd.direction == SELL) {
                 //增加持仓  撤卖单
-                DbUtil.addPosi(orderCmd.uid, orderCmd.code, -finalMatchData.volume, orderCmd.price);
+                DbUtil.addPosi(orderCmd.uid, orderCmd.code, - finalMatchData.volume, orderCmd.price);
             } else {
                 log.error("wrong direction[{}]", orderCmd.direction);
             }
         }
-
-        //TODO 通知客户端 成交的更新
+        //通知委托终端
+        config.getVertx().eventBus().publish(
+                ORDER_NOTIFY_ADDR_PREFIX + orderCmd.uid,
+                ""
+        );
     }
 
 }

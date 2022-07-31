@@ -12,11 +12,14 @@ import com.patrick.disruptoromssettlement.config.GatewayConn;
 import com.patrick.disruptoromssettlement.service.IOrderService;
 import com.patrick.disruptoromssettlement.util.DbUtil;
 import com.patrick.disruptoromssettlement.util.IDConverter;
+import io.vertx.core.buffer.Buffer;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.patrick.disruptoromssettlement.bean.MatchDataConsumer.ORDER_DATA_CACHE_ADDR;
 
 @Log4j2
 @Component
@@ -56,7 +59,7 @@ public class OrderServiceImpl implements IOrderService {
                 .mid(config.getId())
                 .uid(uid)
                 .code(code)
-                .direction(OrderDirection.of(ordertype))
+                .direction(OrderDirection.of(direction))
                 .price(price)
                 .volume(volume)
                 .orderType(OrderType.of(ordertype))
@@ -79,6 +82,20 @@ public class OrderServiceImpl implements IOrderService {
             //2.生成全局ID  组装ID long[int(柜台ID）,int（委托ID，数据库中的主键）]
             orderCmd.oid = IDConverter.combineInt2Long(config.getId(), oid);
 
+
+            //存入缓存
+            byte[] serialize = null;
+            try {
+                serialize = config.getBodyCodec().serialize(orderCmd);
+            } catch (Exception e) {
+                log.error(e);
+            }
+            if (serialize == null) {
+                return false;
+            }
+            config.getVertx().eventBus().send(ORDER_DATA_CACHE_ADDR, Buffer.buffer(serialize));
+
+
             //3。打包委托，发送数据(OrderCmd -> CommonMsg -> TCP数据流)
             //4. 发送数据
             gatewayConn.sendOrder(orderCmd);
@@ -88,7 +105,20 @@ public class OrderServiceImpl implements IOrderService {
 
             return true;
         }
+    }
 
+    @Override
+    public boolean cancelOrder(int uid, int counteroid, int code) {
 
+        final OrderCmd orderCmd = OrderCmd.builder()
+                .uid(uid)
+                .code(code)
+                .type(CmdType.CANCEL_ORDER)
+                .oid(IDConverter.combineInt2Long(config.getId(), counteroid))
+                .build();
+
+        log.info("recv cancel order :{}", orderCmd);
+        gatewayConn.sendOrder(orderCmd);
+        return true;
     }
 }
