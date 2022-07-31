@@ -1,3 +1,5 @@
+package com;
+
 import com.example.disruptoromsgateway.GatewayConfig;
 import com.client.checksum.CheckSum;
 import com.client.codec.BodyCodec;

@@ -1,5 +1,6 @@
 package com.patrick.disruptoromssettlement.util;
 
+import com.client.hq.MatchData;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -30,6 +31,25 @@ public class DbUtil {
     //如何在静态工具类中注入spring管理的对象？
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+
+    public static void saveTrade(int counterOid, MatchData md, OrderCmd orderCmd) {
+        if (orderCmd == null) {
+            return;
+        }
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("Id", md.tid);
+        param.put("Uid", orderCmd.uid);
+        param.put("Code", orderCmd.code);
+        param.put("Direction", orderCmd.direction.getDirection());
+        param.put("Price", md.price);
+        param.put("TCount", md.volume);
+        param.put("Old", counterOid);
+        param.put("Date", TimeformatUtil.yyyyMMdd(md.timestamp));
+        param.put("Time", TimeformatUtil.hhMMss(md.timestamp));
+
+        dbUtil.getSqlSessionTemplate().insert("orderMapper.saveTrade", param);
+        RedisStringCache.remove(Long.toString(orderCmd.uid), CacheType.TRADE);
+    }
 
     //如何在静态工具类中注入spring管理的对象？
     @PostConstruct
@@ -183,6 +203,15 @@ public class DbUtil {
             //查到 命中缓存
             return JsonUtil.fromJsonArr(orderS,OrderInfo.class);
         }
+    }
+
+    public static void updateOrder(long uid, int oid, OrderStatus status) {
+        Map<String, Object> param = Maps.newHashMap();
+        param.put("Id", oid);
+        param.put("Status", status.getCode());
+        dbUtil.getSqlSessionTemplate().update("orderMapper.updateOrder", param);
+
+        RedisStringCache.remove(Long.toString(uid), CacheType.ORDER);
     }
 
     //////////////////////////////成交类////////////////////////////////////////

@@ -1,15 +1,21 @@
 package com.patrick.disruptoromsraftseq.bean;
 
+import com.alipay.sofa.common.profile.ArrayUtil;
+import com.alipay.sofa.jraft.util.Bits;
+import com.alipay.sofa.jraft.util.BytesUtil;
+import com.client.bean.msg.CmdPack;
 import com.client.bean.order.OrderCmd;
 import com.client.bean.order.OrderDirection;
 import com.client.fetch.IFetchService;
 import com.google.common.collect.Lists;
 import com.patrick.disruptoromsraftseq.RaftSeqConfig;
+import io.vertx.core.buffer.Buffer;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -117,8 +123,51 @@ public class FetchTask extends TimerTask {
             return res;
         });
 
-        //TODO 存储到KV Store，发送到撮合核心
+        //TODO 存储到KV Store，广播发送CmdPack 消息到撮合引擎的核心
+        try{
+            //1.生成CmdPack的PackNo -
+            long packNo = getPackNoFromKVStore();
 
+            //2.CmdPack入库 - 保存到KV Store
+            CmdPack cmdPack = new CmdPack(packNo, cmds);
+            byte[] serialized = config.getCodec().serialize(cmdPack);
+            insertToKVStore(packNo, serialized);
+
+            //3.更新PackNo
+            updatePackNoInKVStore(packNo + 1);
+
+            //4. 发送CmdPack
+            config.getMulticastSender().send(Buffer.buffer(serialized),  //要发送的数据
+                                            config.getMulticastPort(),
+                                            config.getMulticastIP(),
+                                            null);  //handler:异步处理器： 消息一旦发出去离开网卡就会调用，而不是等下游收到才调用。 因此无法通过Handler判断下游是否成功收到消息
+        } catch (Exception e){
+            log.error("encode cmd packet error", e);
+        }
+    }
+
+
+    private void insertToKVStore(long packNo, byte[] serialize) {
+        byte[] key = new byte[8];
+        Bits.putLong(key, 0, packNo);
+        config.getNode().getRheaKVStore().put(key, serialize);
+    }
+
+    private static final byte[] PACK_NO_KEY = BytesUtil.writeUtf8("seq_pack_no");//KVStore中的key
+
+    private long getPackNoFromKVStore(){
+        final byte[] bPackNo = config.getNode().getRheaKVStore().bGet(PACK_NO_KEY);
+        long packNo = 0;
+        if(ArrayUtils.isNotEmpty(bPackNo)){
+            packNo = Bits.getLong(bPackNo, 0);
+        }
+        return packNo;
+    }
+
+    private void updatePackNoInKVStore(long packNo) {
+        byte[] bytes = new byte[8];
+        Bits.putLong(bytes, 0, packNo);
+        config.getNode().getRheaKVStore().put(PACK_NO_KEY, bytes);
     }
 
     private int compareVolume(OrderCmd o1, OrderCmd o2) {

@@ -18,6 +18,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.patrick.disruptoromsraftseq.bean.FetchTask;
 import com.patrick.disruptoromsraftseq.bean.Node;
+import io.vertx.core.Vertx;
+import io.vertx.core.datagram.DatagramSocket;
+import io.vertx.core.datagram.DatagramSocketOptions;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +43,25 @@ public class RaftSeqConfig {
     private String serverUrl;
     private String serverList;
 
+
     @NonNull
     private String fileName;
 
     @Getter
     private Node node;
+
+    ///////广播逻辑///////////////
+    @Getter
+    private String multicastIP;
+    @Getter
+    private int multicastPort;
+
+    @Getter
+    private DatagramSocket multicastSender;
+
+    private void startMulticast() {
+        multicastSender = Vertx.vertx().createDatagramSocket(new DatagramSocketOptions());
+    }
 
     public void startup() throws Exception {
         //1.读取配置文件
@@ -53,7 +70,8 @@ public class RaftSeqConfig {
         //2.初始化 和启动集群
         startRaftSeqDbCluster();
 
-        //TODO 3.启动下游广播
+        //TODO 3.启动下游广播 -> 撮合引擎
+        startMulticast();
 
         //TODO 4.初始化网关连接
         startupFetch();
@@ -147,6 +165,8 @@ public class RaftSeqConfig {
         serverUrl = properties.getProperty("serverurl");
         serverList = properties.getProperty("serverlist");
         fetchurls = properties.getProperty("fetchurls");
+        multicastIP = properties.getProperty("multicastip");
+        multicastPort = Integer.parseInt(properties.getProperty("multicastport"));
         log.info("read config:{}", this);
     }
 }

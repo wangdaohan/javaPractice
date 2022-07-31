@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<c3p0-config>
+    <default-config>
+        <!--C3P0 数据库连接池包 -->
+        <property name="driverClass">org.sqlite.JDBC</property>
+        <property name="jdbcUrl">jdbc:sqlite:d:/test.db</property>
+
+        <property name="initialPoolSize">1</property>
+        <property name="maxPoolSize">3</property>
+        <property name="checkoutTimeout">3000</property>
+    </default-config>
+</c3p0-config>

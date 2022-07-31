@@ -24,8 +24,10 @@
 
     </select>
 
-    <update id="updatePwd">
-
+    <update id="updatePwd" parameterType="hashmap">
+        update t_user set password = #{NewPwd}
+        where uid = #{UId}
+          and password=#{OldPwd}
     </update>
 
 </mapper>

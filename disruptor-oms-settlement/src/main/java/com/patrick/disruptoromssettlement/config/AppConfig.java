@@ -40,6 +40,16 @@ public class AppConfig {
 
     /////////////////
 
+    /////////////////websocket配置/////////////////////////
+    @Value("{counter.pubport}")
+    private int pubPort;
+    /////////////////总线配置/////////////////////////
+    @Value("{counter.subbusip}")
+    private String subBusIp;
+
+    @Value("{counter.subbusport}")
+    private int subBusPort;
+
     private Vertx vertx = Vertx.vertx();
 
     /////////////编码相关配置//////////

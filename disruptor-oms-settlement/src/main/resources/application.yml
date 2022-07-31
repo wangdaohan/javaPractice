@@ -28,8 +28,18 @@ counter:
   checksum: com.client.checksum.CheckSum
   bodycodec: com.client.codec.BodyCodec
   msgcodec: com.client.codec.MsgCodec
+  #订阅总线数据 - oms-engine用mqtt(订阅/发布模式）发布的market data和成交数据
+  subbusip: 127.0.0.1
+  subbusport: 1883
+  #websocket地址 UI跟后端传送数据
+  pubport: 8501
 
 gateway:
   senderIp: 127.0.0.1
   senderPort: 8091
   gatewayId: 1001
+
+
+
+
+
